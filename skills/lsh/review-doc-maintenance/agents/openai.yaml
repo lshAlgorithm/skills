@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Doc Maintenance"
+  short_description: "Review project docs before cleanup."
+  default_prompt: "Use review-doc-maintenance to audit STATUS.md, README, docs, and retained workflow notes, then write a tmp-file review memo for the main agent to read and correct."

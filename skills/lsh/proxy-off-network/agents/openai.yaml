@@ -1,0 +1,4 @@
+interface:
+  display_name: "Proxy Off Network"
+  short_description: "Try proxy_off before retrying network operations."
+  default_prompt: "Use proxy_off when network, TLS, package download, or internet access problems appear, then retry the command."

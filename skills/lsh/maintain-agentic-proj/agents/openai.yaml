@@ -1,0 +1,4 @@
+interface:
+  display_name: "Maintain Agentic Project"
+  short_description: "Clean and synchronize durable project docs."
+  default_prompt: "Use maintain-agentic-proj to add, clean, remove, or reconcile STATUS.md and optional PLAN.md hierarchy, preserve current status, how to run current workflows, future plans, concise tried-but-failed status notes, move retained/obsolete run recipes into local doc/ files, maintain optional CONTEXT.md/ADR references, remove legacy/conflicting documentation noise, and leave a clean project state. Prefer STATUS.md-only when requested. Pair with reproducible-logging for run-log audits."

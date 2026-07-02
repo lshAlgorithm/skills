@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agentic Project"
+  short_description: "Durable project status, artifacts, plans, and handoff state."
+  default_prompt: "Use agentic-project to manage this long-running project with high-level README/spec context, necessary STATUS.md files, current workflow run commands, optional PLAN.md files only when the repo explicitly keeps separate plans, optional glossary/decision docs, organized artifacts, and evidence-based completion checks. Pair with reproducible-logging for run logs and exact command capture."
