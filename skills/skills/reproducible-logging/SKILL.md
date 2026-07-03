@@ -73,3 +73,22 @@ Before saying a run is reproducible:
 3. Inspect key output files, not just exit codes.
 4. Record whether the result is real-system evidence, replay/simulator evidence, partial evidence, invalid, or failed.
 5. Update relevant `STATUS.md` files only if the project uses them and the result changes durable state.
+
+## Successful Run Summary
+
+After a complete successful run, write a plain-text report or summary file next to the primary result artifacts unless the repository already produced an equivalent human-readable report.
+
+The summary should be short enough to scan and include:
+
+- run name and timestamp
+- exact command or log path containing it
+- environment details needed to rerun
+- output paths
+- key metrics or qualitative outcome
+- validity classification
+- known caveats
+- next recommended action
+
+Prefer `.md` or `.txt` for this report. Do not duplicate large tables, raw logs, or full traces; point to the authoritative files instead.
+
+After producing the report, ask the user whether they want a visual representation of the data, such as a plot, table image, dashboard, or compact figure. If they want one, clarify the intended audience and the metric/story to emphasize before creating it.
