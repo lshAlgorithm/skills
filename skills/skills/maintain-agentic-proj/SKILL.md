@@ -1,6 +1,6 @@
 ---
 name: maintain-agentic-proj
-description: "Use when cleaning or maintaining an agentic project's durable workflow files and experiment artifacts: add, clean, rename, remove, or reconcile STATUS.md and optional PLAN.md files; keep parent/child docs synchronized; preserve current status, how to run current workflows, future plans, and concise tried-but-failed status notes; move retained/obsolete runnable recipes into local doc/ files; maintain optional CONTEXT.md and ADR references; and remove legacy/conflicting documentation noise. Prefer STATUS.md-only when the user wants one combined durable state file. Pair with reproducible-logging for run-log and command-audit details."
+description: "Use when cleaning or maintaining an agentic project's durable workflow files and experiment artifacts: add, clean, rename, remove, or reconcile STATUS.md and append-only doc/ plan files; keep parent/child docs synchronized; preserve self-contained current status, exact current run commands, artifact pointers, history including tried/failed/superseded notes, and doc/ plan links; maintain optional CONTEXT.md and ADR references; and remove conflicting documentation noise. Pair with reproducible-logging for run-log and command-audit details."
 ---
 
 # Maintain Agentic Project
@@ -13,9 +13,11 @@ Maintain only useful durable state:
 
 - One coherent `STATUS.md` per folder where durable state is useful.
 - Add `STATUS.md` where it improves cooperation; clean or remove it where it creates clutter.
-- `STATUS.md` contains current status, how to run current workflows, future plans, retained obsolete intentions, and artifact/detail pointers.
-- Current runnable commands belong in `STATUS.md`; obsolete or retained runnable recipes belong in `doc/` under the same folder and are linked from `STATUS.md`.
-- Use `PLAN.md` only when the project explicitly keeps a separate plan hierarchy; otherwise merge plan content into `STATUS.md` and remove stale plan files.
+- `STATUS.md` is self-contained pickup context: project purpose, current status, exact current runnable commands, artifact/detail pointers, open gaps, and history.
+- Whenever a part of the file is fixed, you can defer this part to a new file in folder `doc/` for conciseness of the status file.
+- One deferred part should be a coherent block with a reasonable summarization as its name of the new file, not just fragments.
+- Planning detail belongs in append-only `doc/<timestamp-or-topic>-plan.md` files under the same folder. Each planning pass creates a new plan file instead of editing old plan files.
+- Link to `doc/` plan files and merge failed/obsolete/superseded notes into `History`.
 - Optional `CONTEXT.md` contains only project-specific vocabulary.
 - Optional ADRs record only durable decisions, not status, plans, logs, or ordinary failed attempts.
 - No contradictions between parent and child docs.
@@ -30,7 +32,7 @@ Before editing:
 2. Find docs and logs:
 
 ```sh
-find . \( -name PLAN.md -o -name STATUS.md -o -name CONTEXT.md -o -name CONTEXT-MAP.md -o -name '*.log' \)
+find . \( -name STATUS.md -o -name CONTEXT.md -o -name CONTEXT-MAP.md -o -path '*/doc/*.md' -o -name '*.log' \)
 find . \( -path '*/adr/*.md' -o -name ADR.md \)
 ```
 
@@ -40,22 +42,23 @@ find . \( -path '*/adr/*.md' -o -name ADR.md \)
 
 If the user asks to clean a specific folder, scope the audit to that subtree plus its parent docs.
 
-## STATUS.md / PLAN.md Rules
+## STATUS.md / Planning Rules
 
-- `STATUS.md` is the durable state map: current status, how to run current workflows, future plans, authoritative artifact pointers, known gaps, and one-sentence tried/failed/obsolete/superseded intentions.
-- `PLAN.md` is optional and should exist only when the project explicitly keeps future plans separate from status.
+- `STATUS.md` is the durable pickup map: purpose, current status, exact current run commands, authoritative artifact pointers, known gaps, relevant `doc/` links, and concise history.
+- `STATUS.md` must not depend on chat history for project purpose, current state, or how to run current executable workflows.
+- Put plan detail in a new append-only `doc/<timestamp-or-topic>-plan.md` file and link it from `STATUS.md`.
 - Parent docs stay high-level; child docs stay local.
 - Prefer links or paths over duplicating the same details across levels.
-- When preserving history, retain the obsolete intention and reason in one sentence; remove diary detail.
-- When preserving retained/obsolete runnable workflows, move exact old commands into a local `doc/` file and link it from `STATUS.md`.
-- When preserving future work, keep high-level phases in parent status files and detailed local phases in child status files unless a separate plan hierarchy is explicitly retained.
-- If consolidating into `STATUS.md`, delete stale `PLAN.md` files after migrating useful future-plan content.
+- In hierarchy updates, preserve all current runnable workflows' exact commands at the appropriate local `STATUS.md` level. Include `uv`, `.venv`, `tmux`, GPU vars, model paths, endpoints, output paths, and log paths when relevant.
+- Run results, detailed metrics, large tables, raw traces, and long interpretations may be deferred to child folders, reports, summaries, or result artifacts.
+- When preserving old runnable workflows, move exact old commands into a local `doc/` file and link it from `STATUS.md`.
+- When preserving future work, create a new plan doc under local `doc/`; do not rewrite older plan docs.
 - If parent and child docs disagree, prefer newer verified artifacts over older prose.
 - If a conflict changes project direction and cannot be resolved from evidence, ask the user.
 
-You may add a new `STATUS.md` when current local state or future local phases need durable explanation. You may add `PLAN.md` only when the user or repo convention explicitly requires separate plan files. You may remove either when it is empty, redundant, stale, or better represented elsewhere.
+You may add a new `STATUS.md` when current local state or executable workflows need durable explanation. You may add new `doc/` plan files when future work needs durable planning. You may remove stale `STATUS.md` files when they are empty, redundant, stale, or better represented elsewhere.
 
-Follow `references/plan-status-hierarchy.md` when changing `PLAN.md` or `STATUS.md`, especially in repos with hierarchy hooks.
+Follow `references/plan-status-hierarchy.md` when changing `STATUS.md`, especially in repos with hierarchy hooks.
 
 ## CONTEXT.md / ADR Rules
 
@@ -75,14 +78,16 @@ Keep authoritative raw logs referenced by current docs. Remove or archive logs o
 
 ## Run Instructions
 
-For current maintained workflows, keep a compact "How to Run" section in the local `STATUS.md` with exact commands and operational requirements:
+For current maintained workflows, keep a compact `##Reproduce Command` section in the local `STATUS.md` with exact commands and operational requirements:
 
 - `uv` / `.venv` commands for Python setup and execution.
 - `tmux` session names for long runs.
 - GPU variables, model paths, endpoints, and log paths when they affect reproducibility.
 - The expected output paths.
 
-For obsolete or retained workflows, create or update `doc/<workflow>.md` in the same folder and move old command recipes there. `STATUS.md` should keep only the one-sentence retained intention and a pointer to the doc file.
+For old or retained workflows, create or update a local `doc/<workflow>.md` and move old command recipes there. `STATUS.md` should keep only the short historical reason and a pointer to the doc file.
+
+For new planning, create a new local `doc/<timestamp-or-topic>-plan.md` file. Do not modify earlier plan files except to fix broken links or obvious factual errors.
 
 ## Final Report
 
